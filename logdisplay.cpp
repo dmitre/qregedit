@@ -2,7 +2,6 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMenu>
-#include <QRegExp>
 #include "logdisplay.h"
 #include "mainwindow.h"
 #include "global.h"
@@ -80,16 +79,16 @@ CSpecLogHighlighter::CSpecLogHighlighter(QTextDocument *parent)
 
 void CSpecLogHighlighter::highlightBlock(const QString &text)
 {
-    formatBlock(text, QRegExp("^\\S{,8}", Qt::CaseInsensitive), Qt::black, true);
-    formatBlock(text, QRegExp("\\s(\\S+\\s)?Debug:\\s", Qt::CaseInsensitive), Qt::black, true);
-    formatBlock(text, QRegExp("\\s(\\S+\\s)?Warning:\\s", Qt::CaseInsensitive), Qt::darkRed, true);
-    formatBlock(text, QRegExp("\\s(\\S+\\s)?Critical:\\s", Qt::CaseInsensitive), Qt::red, true);
-    formatBlock(text, QRegExp("\\s(\\S+\\s)?Fatal:\\s", Qt::CaseInsensitive), Qt::red, true);
-    formatBlock(text, QRegExp("\\s(\\S+\\s)?Info:\\s", Qt::CaseInsensitive), Qt::darkBlue, true);
-    formatBlock(text, QRegExp("\\(\\S+\\)$", Qt::CaseInsensitive), Qt::gray, false, true);
+    formatBlock(text, QRegularExpression("^\\S{,8}", QRegularExpression::CaseInsensitiveOption), Qt::black, true);
+    formatBlock(text, QRegularExpression("\\s(\\S+\\s)?Debug:\\s", QRegularExpression::CaseInsensitiveOption), Qt::black, true);
+    formatBlock(text, QRegularExpression("\\s(\\S+\\s)?Warning:\\s", QRegularExpression::CaseInsensitiveOption), Qt::darkRed, true);
+    formatBlock(text, QRegularExpression("\\s(\\S+\\s)?Critical:\\s", QRegularExpression::CaseInsensitiveOption), Qt::red, true);
+    formatBlock(text, QRegularExpression("\\s(\\S+\\s)?Fatal:\\s", QRegularExpression::CaseInsensitiveOption), Qt::red, true);
+    formatBlock(text, QRegularExpression("\\s(\\S+\\s)?Info:\\s", QRegularExpression::CaseInsensitiveOption), Qt::darkBlue, true);
+    formatBlock(text, QRegularExpression("\\(\\S+\\)$", QRegularExpression::CaseInsensitiveOption), Qt::gray, false, true);
 }
 
-void CSpecLogHighlighter::formatBlock(const QString &text, const QRegExp &exp,
+void CSpecLogHighlighter::formatBlock(const QString &text, const QRegularExpression &exp,
                                       const QColor &color,
                                       bool weight,
                                       bool italic,
@@ -110,11 +109,12 @@ void CSpecLogHighlighter::formatBlock(const QString &text, const QRegExp &exp,
     fmt.setFontUnderline(underline);
     fmt.setFontStrikeOut(strikeout);
 
-    int pos = 0;
+    QRegularExpressionMatchIterator i = exp.globalMatch(text);
 
-    while ((pos = exp.indexIn(text, pos)) != -1) {
-        int length = exp.matchedLength();
+    while (i.hasNext()) {
+        QRegularExpressionMatch m = i.next();
+        int length = m.capturedLength();
+        int pos = m.capturedStart();
         setFormat(pos, length, fmt);
-        pos += length;
     }
 }

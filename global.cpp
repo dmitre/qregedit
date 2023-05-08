@@ -1,7 +1,6 @@
 #include <QSettings>
 #include <QMutex>
 #include <QTime>
-#include <QRegExp>
 #include <QRegularExpression>
 #include "global.h"
 #include "settingsdlg.h"

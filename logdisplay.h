@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QStringList>
 #include <QSyntaxHighlighter>
-#include <QRegExp>
 
 namespace Ui {
     class CLogDisplay;
@@ -40,7 +39,7 @@ class CSpecLogHighlighter : public QSyntaxHighlighter {
     void highlightBlock(const QString &text);
   private:
     void formatBlock(const QString &text,
-                     const QRegExp &exp,
+                     const QRegularExpression &exp,
                      const QColor &color = Qt::black,
                      bool weight = false,
                      bool italic = false,

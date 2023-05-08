@@ -120,32 +120,20 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::centerWindow()
 {
-//FIXME QDesktopWidget *desktop = QApplication::desktop();
-//    int screen = 0;
-//    QWidget *w = window();
-//    QDesktopWidget *desktop = QApplication::desktop();
+    QScreen *scr = QGuiApplication::primaryScreen();
 
-//    if (w) {
-//        screen = desktop->screenNumber(w);
-//    } else if (desktop->isVirtualDesktop()) {
-//        screen = desktop->screenNumber(QCursor::pos());
-//    } else {
-//        screen = desktop->screenNumber(this);
-//    }
+    QRect rect(scr->availableGeometry());
+    int h = 80 * rect.height() / 100;
+    QSize nw(135 * h / 100, h);
 
-//    QRect rect(desktop->availableGeometry(screen));
-//    int h = 80 * rect.height() / 100;
-//    QSize nw(135 * h / 100, h);
+    if (nw.width() < 1000) nw.setWidth(80 * rect.width() / 100);
 
-//    if (nw.width() < 1000) nw.setWidth(80 * rect.width() / 100);
+    resize(nw);
+    move(rect.width() / 2 - frameGeometry().width() / 2, rect.height() / 2 - frameGeometry().height() / 2);
 
-//    resize(nw);
-//    move(rect.width() / 2 - frameGeometry().width() / 2,
-//         rect.height() / 2 - frameGeometry().height() / 2);
-
-//    QList<int> sz;
-//    sz << nw.width() / 4 << 3 * nw.width() / 4;
-//    ui->splitter->setSizes(sz);
+    QList<int> sz;
+    sz << nw.width() / 4 << 3 * nw.width() / 4;
+    ui->splitter->setSizes(sz);
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
